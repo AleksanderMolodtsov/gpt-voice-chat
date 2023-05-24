@@ -5,7 +5,6 @@ import {  ogg } from './ogg.js'
 import { openai } from "./openai.js";
 import { code } from "telegraf/format";
 
-console.log(config.get('TEST'));
 
 const INITIAL_SESSION = {
     messages: [],

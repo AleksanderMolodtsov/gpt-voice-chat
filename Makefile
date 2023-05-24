@@ -1,5 +1,5 @@
 build:
-	docker build -t pocket-smarty-pants .
+	docker build -t psp .
 
 run:
-	docker run -d -p 3000:3000 --name pocket-smarty-pants --rm pocket-smarty-pants
+	docker run -p 3000:3000 --name psp --rm psp

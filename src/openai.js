@@ -3,7 +3,7 @@ import config from 'config';
 import { createReadStream } from 'fs'
 
 
-class OpenAI {
+export class OpenAI {
     roles = {
         ASSISTANT: 'assistant',
         USER: 'user',
