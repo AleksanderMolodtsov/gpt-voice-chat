@@ -4,6 +4,8 @@ import { message } from 'telegraf/filters';
 import {  ogg } from './ogg.js'
 import { openai } from "./openai.js";
 import { code } from "telegraf/format";
+import { sdk_instance as sdk } from "./sdk.js";
+
 
 
 const INITIAL_SESSION = {
@@ -29,10 +31,11 @@ bot.on(message('text'), async (ctx) => {
     try {
         await ctx.reply(code('Обработка запроса...'));
         const text = ctx.message.text;
-        await ctx.reply(code(`Ваш запрос ${text}`))
+        await ctx.reply(code(`Ищу ответ на Ваш вопрос: "${text}"... ⏳`));
+        await ctx.replyWithChatAction('typing');
 
         ctx.session.messages.push({role: openai.roles.USER, content: text});
-        const response = await openai.chat(ctx.session.messages);
+        const response = openai.chat(ctx.session.messages);
 
         ctx.session.messages.push({role: openai.roles.ASSISTANT, content: response.content});
 
@@ -52,14 +55,18 @@ bot.on(message('voice'), async (ctx) => {
         const mp3Path = await ogg.toMp3(oggPath, userId);
 
         const text = await openai.trascription(mp3Path);
-        await ctx.reply(code(`Ваш запрос ${text}`))
+        await ctx.reply(code(`Ищу ответ на Ваш вопрос: "${text}"`))
+        await ctx.replyWithChatAction('typing');
 
         ctx.session.messages.push({role: openai.roles.USER, content: text});
         const response = await openai.chat(ctx.session.messages);
 
+        const speech = await sdk.textToSpeech(response.content);
+
         ctx.session.messages.push({role: openai.roles.ASSISTANT, content: response.content});
 
         await ctx.reply(response.content);
+        await ctx.replyWithVoice(speech.amazon.audio_resource_url);
     } catch (e) {
         console.log(`Error while voice message: ${e}`)
     }

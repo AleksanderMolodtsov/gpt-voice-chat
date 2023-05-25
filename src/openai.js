@@ -24,7 +24,7 @@ export class OpenAI {
             });
             return response.data.choices[0].message;
         } catch (e) {
-
+            console.log('Error while chat to GPT!', e.message);
         }
     }
 
