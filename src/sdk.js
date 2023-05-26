@@ -34,7 +34,7 @@ class SDK {
                 language: 'ru',
                 text: message,
                 option: 'FEMALE',
-                audio_format: 'ogg'
+                audio_format: 'mp3'
             });
             return this.getSuccessSpeech(response.data);
         } catch (e) {
