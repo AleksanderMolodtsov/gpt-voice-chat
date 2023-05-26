@@ -8,6 +8,18 @@ class SDK {
        this.sdk = sdk;
     }
 
+    getSuccessSpeech(speeches) {
+        const successfullySpeeches = Object.entries(speeches).reduce((acc, [name, value]) => {
+            if (value.status === 'success' && value.audio_resource_url) {
+                name === 'amazon' ? acc[0] = value.audio_resource_url : acc.push(value.audio_resource_url);
+                return acc;
+            }
+            return acc;
+        }, []);
+
+        return successfullySpeeches[0];
+    }
+
     async textToSpeech(message) {
         try {
             const response = await this.sdk.audio_text_to_speech_create({
@@ -24,7 +36,7 @@ class SDK {
                 option: 'FEMALE',
                 audio_format: 'ogg'
             });
-            return response.data;
+            return this.getSuccessSpeech(response.data);
         } catch (e) {
             console.log('Ошибка при конвертации текста в речь', e.message);
         }
